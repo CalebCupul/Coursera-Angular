@@ -10,7 +10,7 @@ import { LeaderService } from '../services/leader.service';
 })
 export class AboutComponent implements OnInit {
 
-  leaders: Leader[] = LEADERS;
+  leaders: Leader[];
 
   selectedLeader: Leader;
 
