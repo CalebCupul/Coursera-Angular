@@ -60,7 +60,8 @@ export class DishdetailComponent implements OnInit {
 
     return 0;
   }
-
+  
+  dishcopy: Dish;
   dish: Dish;
   dishIds: string[];
   prev: string;
@@ -79,8 +80,11 @@ export class DishdetailComponent implements OnInit {
   ngOnInit() {
     this.dishservice.getDishIds()
     .subscribe(dishIds => this.dishIds = dishIds, errmess => this.errmess = <any>errmess);
-    this.route.params.pipe(switchMap((params: Params) => this.dishservice.getDish(params['id'])))
-    .subscribe(dish => { this.dish = dish; this.setPrevNext(dish.id); });
+    
+    this.route.params
+      .pipe(switchMap((params: Params) => this.dishservice.getDish(params['id'])))
+      .subscribe(dish => { this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); },
+        errmess => this.errmess = <any>errmess );
 
   }
 
@@ -127,6 +131,12 @@ export class DishdetailComponent implements OnInit {
     this.comment.date = new Date().toISOString();
     this.dish.comments.push(this.comment);
     console.log(this.comment);
+    this.dishcopy.comments.push(this.comment);
+    this.dishservice.putDish(this.dishcopy)
+      .subscribe(dish => {
+        this.dish = dish; this.dishcopy = dish;
+      },
+      errmess => { this.dish = null; this.dishcopy = null; this.errmess = <any>errmess; });
     this.commentForm.reset({
       author: '',
       rating: '',
