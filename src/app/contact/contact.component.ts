@@ -15,7 +15,8 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
     'style': 'display: block;'
     },
     animations: [
-      flyInOut()
+      flyInOut(),
+      expand()
     ]
 })
 export class ContactComponent implements OnInit {
@@ -26,6 +27,7 @@ export class ContactComponent implements OnInit {
   feedbackcopy: Feedback;
   contactType = ContactType;
   feedbackErrMsg: string;
+  isSaved: boolean = false;
   @ViewChild('fform') feedbackFormDirective;
 
 
@@ -109,10 +111,12 @@ export class ContactComponent implements OnInit {
   }
 
   onSubmit() {
+    this.isSaved = true;
     this.feedback = this.feedbackForm.value;
     this.feedbackService.submitFeedback(this.feedback)
     .subscribe(feedback => {
       this.feedback = feedback;
+      this.isSaved = false;
     },
     feedbackerrMsg => { this.feedback = null; this.feedbackErrMsg = <any>feedbackerrMsg; });
     
